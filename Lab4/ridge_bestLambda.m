@@ -1,13 +1,10 @@
-% load data
-clear all;
-load('dataEx3.mat');
+function [ betaStar ] = ridge_bestLambda( y, X, degree, K )
+%UNTITLED2 Summary of this function goes here
+%   Detailed explanation goes here
 
-% choose degree
-degree = 7;
 
 % split data in K fold (we will only create indices)
 setSeed(1);
-K = 4;
 N = size(y,1);
 idx = randperm(N);
 Nk = floor(N/K);
@@ -49,21 +46,14 @@ for i = 1:length(lambda)
 	mseTe(i) = mean(mseTeSub);
 end
 
-[errStar, lambdaStar] = min(mseTe);
-maxTe = max(mseTe);
+[errStar, star] = min(mseTe);
 
-lambdaStar = lambda(lambdaStar);
+lambdaStar = lambda(star);
 
-
-% plot
-figure
-
-semilogx(lambda, mseTr)
-hold on; 
-semilogx(lambda, mseTe)
+betaStar = ridgeRegression(yTr, tXTr, lambdaStar);
 
 
-SP=lambdaStar; %your point goes here
-line([SP SP], [0 maxTe]);
 
-legend('Train error', 'Test error');
+
+end
+

@@ -29,7 +29,7 @@ for s = 1:50 % # of seeds
         
         % get beta using least squares
         % compute train and test RMSE
-        beta = leastSquares(yTr,tXTr);
+        beta = ridge_bestLambda(yTr,XTr,k,4);
         
         rmseTr(s,k) = computeCost(yTr,tXTr,beta);
         rmseTe(s,k) = computeCost(yTe,tXTe,beta);
@@ -48,5 +48,3 @@ plot(degrees, rmseTr_mean,'b','linewidth', 3);
 xlabel('degree');
 ylabel('error');
 
-figure;
-boxplot(rmseTe, 'boxstyle', 'filled');
