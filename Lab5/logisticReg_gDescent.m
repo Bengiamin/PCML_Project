@@ -13,6 +13,13 @@ X = X(idx,:);
 y = y(1:200);
 X = X(1:200,:);
 
+meanX = mean(X);
+X(:,1) = X(:,1) - meanX(1);
+X(:,2) = X(:,2) - meanX(2);
+
+X(:,1) = X(:,1)./std(X(:,1));
+X(:,2) = X(:,2)./std(X(:,2));
+
 male = X(y, :);
 female = X(not(y), :);
 
@@ -32,12 +39,13 @@ for k = 1:maxIters
     g = computeGradient(y,tX,beta);
     
     % INSERT YOUR FUNCTION FOR COMPUTING COST FUNCTION
-    L = computeCost(y,tX,beta);
+    L = computeCost(y,tX,beta)
     
     % INSERT GRADIENT DESCENT UPDATE TO FIND BETA
     beta = beta - alpha.*g;
     
     % INSERT CODE FOR CONVERGENCE
+    gre = g'*g;
     if g'*g < 1e-5; break; end;
     
     % store beta and L
@@ -59,7 +67,7 @@ for k = 1:maxIters
     
     % plot the decision surface
     contourf(hx, wx, pred, 1);
-    %pause(.5) % wait half a second
+    pause(.5) % wait half a second
     
     % plot indiviual data points
     hold on

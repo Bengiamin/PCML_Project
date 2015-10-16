@@ -34,6 +34,7 @@ tX = [ones(size(X,1),1) X];
 
 beta = leastSquares(y,tX);
 
+L = computeCost(y,tX,beta)
 
 pred = beta(1)*ones(size(hx)) + beta(2)*hx + beta(3)*wx;
 
