@@ -1,9 +1,9 @@
-function [ L ] = computeCost(Y, t, bet)
+function [ L ] = computeCost(Y, tX, bet)
     L = 0;
     for i = 1:size(Y)
-        L = L + Y(i)*t(1,:)*bet - log(1+exp(t(1,:)*bet));
+        L = L + Y(i)*tX(i,:)*bet - log(1+exp(tX(i,:)*bet));
     end
     
-    L = -L;
+    L = L;
 end
 
