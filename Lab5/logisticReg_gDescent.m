@@ -46,7 +46,7 @@ for k = 1:maxIters
     
     % INSERT CODE FOR CONVERGENCE
     gre = g'*g;
-    if g'*g < 1e-5; break; end;
+    if g'*g < 1e-2; break; end;
     
     % store beta and L
     beta_all(:,k) = beta;
