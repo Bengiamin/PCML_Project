@@ -4,6 +4,6 @@ function [ L ] = computeCost(Y, tX, bet)
         L = L + Y(i)*tX(i,:)*bet - log(1+exp(tX(i,:)*bet));
     end
     
-    L = L;
+    L = -L;
 end
 

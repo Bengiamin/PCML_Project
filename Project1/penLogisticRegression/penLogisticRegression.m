@@ -1,4 +1,4 @@
-function [ beta ] = logisticRegression(y,tX,alpha)
+function [ beta ] = penLogisticRegression(y,tX,alpha,lambda)
 
 %Algorithm parameter
 maxIters = 1000;
@@ -8,14 +8,13 @@ si = size(tX(1,:));
 beta = zeros(si(2),1);
 
 for k = 1:maxIters
-    % Compute gradient
-    g = computeGradient(y,tX,beta);
     
-    % Compute cost
-    L = computeCost(y,tX,beta);
+    %Comput cost, gradient and hessian
+    [L, g, H] = logisticRegLoss(beta, y, tX);
     
-    % Update beta according to gradient
-    beta = beta - alpha.*g;
+    % Update beta according to Newton's method
+    d = H \ g;
+    beta = beta - alpha.*d;
     
     % Convergence check
     if g'*g < 1e-2; break; end;
@@ -24,6 +23,9 @@ for k = 1:maxIters
     beta_all(:,k) = beta;
     L_all(k) = L;
 end
+
+
+
 
 end
 
