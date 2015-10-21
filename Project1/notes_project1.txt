@@ -1,0 +1,4 @@
+First plot of the data suggest that there is gaps.
+
+21.10.15
+Test different functions
