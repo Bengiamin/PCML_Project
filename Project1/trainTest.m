@@ -1,13 +1,12 @@
 
 function [ output_args ] = trainTest(y, tX, prop)
-%UNTITLED4 Summary of this function goes here
+%split the data and train it. output train error and test error
 %   Detailed explanation goes here
     
     %split with seeding
     % get train and test data
 	[tXTr, yTr, tXTe, yTe] = split(y,tX,prop);
     
-
     % CV ?
     
     
@@ -21,6 +20,7 @@ function [ output_args ] = trainTest(y, tX, prop)
 	% print 
 	fprintf('Proportion %.2f: Train RMSE :%0.4f Test RMSE :%0.4f\n', prop, rmseTr, rmseTe);
 
+    
 
 end
 

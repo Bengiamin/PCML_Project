@@ -18,6 +18,13 @@ for k = 1:maxIters
     % Update beta according to gradient
     beta = beta - alpha.*g;
     
+    disp 'beta'
+    disp(beta)
+    disp 'g'
+    disp(g)
+    
+    pause;
+    
     % Convergence limitation
     if g'*g < 1e-5; break; end;
 end
