@@ -1,3 +1,4 @@
+
 function [ output_args ] = trainTest(y, tX, prop)
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
