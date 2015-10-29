@@ -5,6 +5,7 @@ function [ S ] = sigma( X )
              S(i) = 1 / (1 + exp(-X(i)));
          else
              S(i) = exp(X(i)) / (1 + exp(X(i)));
+         end
      end
 
      S = S';
