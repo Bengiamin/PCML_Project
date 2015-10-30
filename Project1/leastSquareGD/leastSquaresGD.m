@@ -7,14 +7,10 @@ maxIters = 1000;
 si = size(tX(1,:));
 beta = zeros(si(2),1);
 
-% iterate
-fprintf('Starting iterations, press Ctrl+c to break\n');
-fprintf('L  beta0 beta1\n');
-
 for k = 1:maxIters
     %Compute gradent
     g = computeGradientLS(y,tX,beta);
-    
+ 
     % Update beta according to gradient
     beta = beta - alpha.*g;
     
