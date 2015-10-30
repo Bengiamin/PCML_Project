@@ -8,8 +8,10 @@ addpath(genpath('Data/'));
 % load regression data
 load('Chennai_regression');
 
-X = normalize(X_train);
+%Extract evaluation data didn't use during training
+[X_train, y_train, X_eval,y_eval] = split(y_train,X_train,0.8);
 
+X = normalize(X_train);
 
 %Split data in two y < 3400 and y > 3400 
 idx = find(y_train > 3400);
