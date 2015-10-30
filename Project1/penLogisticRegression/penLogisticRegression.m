@@ -10,7 +10,7 @@ beta = zeros(si(2),1);
 for k = 1:maxIters
     
     %Comput cost, gradient and hessian
-    [L, g, H] = logisticRegLoss(beta, y, tX);
+    [L, g, H] = logisticRegLoss(beta, y, tX, lambda);
     
     % Update beta according to Newton's method
     d = H \ g;
