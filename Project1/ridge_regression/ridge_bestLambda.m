@@ -1,4 +1,4 @@
-function [ betaStar, lambdaStar ] = ridge_bestLambda( y, X, degree, K )
+function [ betaStar, lambdaStar ] = ridge_bestLambda( y, X, K )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -13,7 +13,7 @@ for k = 1:K
 end
 
 % lambda values (INSERT CODE)
-lambda = logspace(-4,4,100);
+lambda = logspace(-2,2,200);
 
 % K-fold cross validation
 for i = 1:length(lambda)
@@ -28,18 +28,18 @@ for i = 1:length(lambda)
 		XTr = X(idxTr,:);
 		% form tX (INSERT CODE)
      
-        tXTr = [ones(length(yTr), 1) myPoly(XTr, degree)];
-        tXTe = [ones(length(yTe), 1) myPoly(XTe, degree)];
+        tXTr = [ones(length(yTr), 1) XTr];
+        tXTe = [ones(length(yTe), 1) XTe]; 
         
 		% least squares (INSERT CODE)
         %beta = leastSquares(yTr,tXTr);
         beta = ridgeRegression(yTr, tXTr, lambda(i));
         
 		% training and test MSE(INSERT CODE)
-		mseTrSub(k) = computeCost(yTr,tXTr,beta); 
+		mseTrSub(k) = sqrt(2*MSE(yTr,tXTr,beta)); 
 
 		% testing MSE using least squares
-		mseTeSub(k) = computeCost(yTe,tXTe,beta);  
+		mseTeSub(k) = sqrt(2* MSE(yTe,tXTe,beta));  
 
 	end
 	mseTr(i) = mean(mseTrSub);
@@ -54,7 +54,7 @@ semilogx(lambda, mseTe)
 
 [errStar, star] = min(mseTe);
 
-lambdaStar = lambda(star);
+lambdaStar = lambda(star)
 
 SP=lambdaStar; %your point goes here
 line([SP SP], [0 max(mseTe)]);
