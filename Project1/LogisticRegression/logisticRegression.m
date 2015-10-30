@@ -10,8 +10,7 @@ beta = zeros(si(2),1);
 for k = 1:maxIters
     % Compute gradient
     g = computeGradientLR(y,tX,beta);
-    g
-    pause
+    
     % Compute cost
     L = logLikelihoodCost(y,tX,beta);
     

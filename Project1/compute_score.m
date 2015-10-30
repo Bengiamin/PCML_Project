@@ -1,4 +1,4 @@
-function [ mseTr, mseTe] = compute_score(y, X,model, idx, alpha , lambda, K, degree)
+function [ rmseTr, rmseTe] = compute_score(y, X,model, idx, alpha , lambda, K, degree)
 
 %Model available: ls, lsgd, rr, lr, plr
 if idx ~= 0
@@ -48,12 +48,12 @@ for k = 1:K
             Disp('Unknown model! use one of those: ls, lsgd, rr, lr, plr');
     end
     
-    mseTrSub(k) = sqrt(2*MSE(yTr,tXTr,beta));
-    mseTeSub(k) = sqrt(2*MSE(yTe,tXTe,beta));
+    rmseTrSub(k) = sqrt(2*MSE(yTr,tXTr,beta));
+    rmseTeSub(k) = sqrt(2*MSE(yTe,tXTe,beta));
 end
 
-    mseTr = mean(mseTrSub);
-	mseTe = mean(mseTeSub);
+    rmseTr = mean(rmseTrSub);
+	rmseTe = mean(rmseTeSub);
 
 end
 
