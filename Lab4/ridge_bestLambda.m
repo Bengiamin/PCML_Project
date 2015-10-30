@@ -1,4 +1,4 @@
-function [ betaStar ] = ridge_bestLambda( y, X, degree, K )
+function [ betaStar, lambdaStar ] = ridge_bestLambda( y, X, degree, K )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -13,7 +13,7 @@ for k = 1:K
 end
 
 % lambda values (INSERT CODE)
-lambda = logspace(-2,2,100);
+lambda = logspace(-4,4,100);
 
 % K-fold cross validation
 for i = 1:length(lambda)
@@ -46,9 +46,18 @@ for i = 1:length(lambda)
 	mseTe(i) = mean(mseTeSub);
 end
 
+figure;
+semilogx(lambda, mseTr)
+hold on; 
+semilogx(lambda, mseTe)
+
+
 [errStar, star] = min(mseTe);
 
 lambdaStar = lambda(star);
+
+SP=lambdaStar; %your point goes here
+line([SP SP], [0 max(mseTe)]);
 
 betaStar = ridgeRegression(yTr, tXTr, lambdaStar);
 
