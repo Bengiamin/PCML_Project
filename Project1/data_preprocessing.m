@@ -11,6 +11,8 @@ load('Chennai_regression');
 %Extract evaluation data didn't use during training
 [X_train, y_train, X_eval,y_eval] = split(y_train,X_train,0.8);
 
+X_eval = normalize(X_eval);
+X_test = normalize(X_test);
 X_train = normalize(X_train);
 
 %Split data in two y < 3400 and y > 3400 

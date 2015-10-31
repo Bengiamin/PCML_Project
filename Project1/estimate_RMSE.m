@@ -54,13 +54,13 @@ for k = 1:K
     %%%%%%%%%%%%%%%%%%% Testing %%%%%%%%%%%%%%%%%%%
     
     %Spling the test value into two set according to the 13th row of X
-    idx = find(XTe(:,13) > 0.471);
-    yTe_large = yTe(idx);
-    tXTe_large = [ones(length(yTe_large), 1) XTe(idx,:) myPoly(XTe(idx,[14 15]),degree)];
+    idx = find(X_eval(:,13) > 0.471);
+    y_eval_large = y_eval(idx);
+    tX_eval_large = [ones(length(y_eval_large), 1) X_eval(idx,:) myPoly(X_eval(idx,[14 15]),degree)];
     
-    idx = find(XTe(:,13) <= 0.471);
-    yTe_small = yTe(idx);
-    tXTe_small = [ones(length(yTe_small), 1) XTe(idx,:) myPoly(XTe(idx,[48 17 50]),degree)];
+    idx = find(X_eval(:,13) <= 0.471);
+    y_eval_small = y_eval(idx);
+    tX_eval_small = [ones(length(y_eval_small), 1) X_eval(idx,:) myPoly(X_eval(idx,[48 17 50]),degree)];
     
     
     %Compute the RMSE for training and test set
@@ -68,8 +68,8 @@ for k = 1:K
     rmseTr_small(k) = sqrt(2*MSE(y_small,tXTr_small,beta_small));
     rmseTr_mean(k) = (rmseTr_large(k)+rmseTr_small(k))/2;
   
-    rmseTe_large(k) = sqrt(2*MSE(yTe_large,tXTe_large,beta_large));
-    rmseTe_small(k) = sqrt(2*MSE(yTe_small,tXTe_small,beta_small));
+    rmseTe_large(k) = sqrt(2*MSE(y_eval_large,tX_eval_large,beta_large));
+    rmseTe_small(k) = sqrt(2*MSE(y_eval_small,tX_eval_small,beta_small));
     rmseTe_mean(k) = (rmseTe_large(k)+rmseTe_small(k))/2;
 end
 

@@ -50,6 +50,7 @@ for k = 1:K
     if  (strcmp(model, 'lr') == 1) || (strcmp(model, 'plr') == 1)
         rmseTrSub(k) = logLikelihoodCost(yTr, tXTr, beta);
         rmseTeSub(k) = logLikelihoodCost(yTe, tXTe, beta);
+        beta
     else
         rmseTrSub(k) = sqrt(2*MSE(yTr,tXTr,beta));
         rmseTeSub(k) = sqrt(2*MSE(yTe,tXTe,beta));
