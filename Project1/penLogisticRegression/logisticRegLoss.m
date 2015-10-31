@@ -8,13 +8,13 @@ for i = 1:size(y)
     S(i,i) = sigma(tX(i,:)*beta)*(1-sigma(tX(i,:)*beta));
 end
 
-L = L - lambda * dot(beta, beta);
+L = - L + lambda * dot(beta, beta);
 
-
-L = -L;
+lm = lambda.*eye(size(tX,2));
+lm(1,1) = 0;
 
 %Compute hession
-H = tX'*S*tX;
+H = tX'*S*tX + lm;
 
 %Compute gradient
 S = sigma(tX*beta);
