@@ -48,9 +48,11 @@ for k = 1:K
     end
     
     if  (strcmp(model, 'lr') == 1) || (strcmp(model, 'plr') == 1)
-        rmseTrSub(k) = logLikelihoodCost(yTr, tXTr, beta);
-        rmseTeSub(k) = logLikelihoodCost(yTe, tXTe, beta);
-        beta
+           [y_hatTr, probTr] = predictY(tXTr, beta);
+           [y_hatTe, probTe] = predictY(tXTe, beta);
+   
+            rmseTrSub(k) = zeroOneLoss(y_hatTr, yTr);
+            rmseTeSub(k) = zeroOneLoss(y_hatTe, yTe);
     else
         rmseTrSub(k) = sqrt(2*MSE(yTr,tXTr,beta));
         rmseTeSub(k) = sqrt(2*MSE(yTe,tXTe,beta));

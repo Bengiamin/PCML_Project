@@ -1,9 +1,9 @@
 %Compute the score for ermse_xvery featue of x
 data_preprocessing_class;
 
-lambda = 0.5;
+lambda = 0;
 K= 4;
-alpha = 0.1;
+alpha = 0.9;
 
 D = size(X_train,2);
 
@@ -12,7 +12,7 @@ rmse_x_Te = zeros(D,1);
 min = 10000;
 best_x = 0;
 for i = 1:size(X_train,2)
-    [ rmseTr, rmseTe] = compute_score(y_train, X_train, 'plr', i, alpha , lambda , K, 0);
+    [ rmseTr, rmseTe] = compute_score(y_bal, X_bal, 'plr', i, alpha , lambda , K, 0);
     
     rmse_x(i) = (rmseTr + rmseTe)/2;
     
