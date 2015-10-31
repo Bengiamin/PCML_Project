@@ -29,9 +29,9 @@ end
 figure;
 for i=1:size(X_train,2)
     %scatter(X_train(:,i),y_train, '.');
-    histogram(X_true(:,i))
+    histogram(X_true(:,i), 25)
     hold on
-    histogram(X_false(:,i))
+    histogram(X_false(:,i), 25)
     xlabel(i);
     pause;
     hold off

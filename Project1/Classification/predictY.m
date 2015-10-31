@@ -6,7 +6,7 @@ function [ y_hat, prob ] = predictY( tX, beta )
     pred = tX * beta;
     prob = sigma(pred);
     
-    y_hat = 2 * round(prob) -1;
+    y_hat = round(prob);
     
 
 
