@@ -29,10 +29,10 @@ for k = 1:K
     idxTe = idxCV(k,:);
     idxTr = idxCV([1:k-1 k+1:end],:);
     idxTr = idxTr(:);
-    yTe = y_bal(idxTe);
-    XTe = X_bal(idxTe,:);
-    yTr = y_bal(idxTr);
-    XTr = X_bal(idxTr,:);
+    yTe = y_train(idxTe);
+    XTe = X_train(idxTe,:);
+    yTr = y_train(idxTr);
+    XTr = X_train(idxTr,:);
     
     %%%%%%%%%%%%%%%%%%% Training %%%%%%%%%%%%%%%%%%%
     
@@ -56,7 +56,7 @@ for k = 1:K
     
     %%%%%%%%%%%%%%%%%%% Testing %%%%%%%%%%%%%%%%%%%
     
-    %Spliting the test value into two set according to the 13th row of X
+    %Spliting the test value into two set according to the 2nd row of X
     idx = find(XTe(:,2) > 18);
     yTe_1 = yTe(idx);
     tXTe_1 = [ones(length(yTe_1), 1) XTe(idx,:)];
@@ -66,7 +66,7 @@ for k = 1:K
     tXTe_2 = [ones(length(yTe_2), 1) XTe(idx,:) ];
     
     
-    %Compute the RMSE for training and test set
+    %Compute the prediction for training and test set
     [y_hatTr1, probTr1] = predictY(tXTr_1, beta_1);
     [y_hatTr2, probTr2] = predictY(tXTr_2, beta_2);
    
@@ -81,6 +81,27 @@ for k = 1:K
     errTe2(k) = zeroOneLoss(y_hatTe2, yTe_2);
     errMeanTe(k) = (errTe1(k) + errTe2(k)) /2;
     
+    
+    %%%%%%%%%%%%%%%%%% Testing on unbalanced (evaluation) test %%%%%%%%%%%%%%%%%%%
+     %Spliting the test value into two set according to the 2nd row of X
+    idx = find(X_eval(:,2) > 18);
+    y_eval_1 = y_eval(idx);
+    tX_eval_1 = [ones(length(y_eval_1), 1) X_eval(idx,:)];
+    
+    idx = find(X_eval(:,2) <= 18);
+    y_eval_2 = y_eval(idx);
+    tX_eval_2 = [ones(length(y_eval_2), 1) X_eval(idx,:) ];
+    
+     %Compute the prediction for evaluation set
+    [y_hat_eval_1, probE1] = predictY(tX_eval_1, beta_1);
+    [y_hat_eval_2, probE2] = predictY(tX_eval_2, beta_2);
+   
+    err_eval_1(k) = zeroOneLoss(y_hat_eval_1, y_eval_1);
+    err_eval_2(k) = zeroOneLoss(y_hat_eval_2, y_eval_2);
+    errMean_eval(k) = (err_eval_1(k) + err_eval_2(k)) /2;
+    
+    
+    
 end
 
 %Here depending on k there is a trade of between negative bias and variance
@@ -92,4 +113,9 @@ stdTr = std(errMeanTr)
 meanTE_1 = mean(errTe1);
 meanTE_2 = mean(errTe2);
 meanTE = mean (errMeanTe)
-stdTr = std(errMeanTe)
+stdTe = std(errMeanTe)
+
+mean_EVAL_1 = mean(err_eval_1);
+mean_EVAL_2 = mean(err_eval_2);
+mean_EVAL = mean (errMean_eval)
+std_EVAL = std(errMean_eval)
