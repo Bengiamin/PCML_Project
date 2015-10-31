@@ -28,13 +28,10 @@ end
 
 figure;
 for i=1:size(X_train,2)
-    %scatter(X_train(:,i),y_train, '.');
-    histogram(X_true(:,i))
-    hold on
-    histogram(X_false(:,i))
-    xlabel(i);
-    pause;
-    hold off
+    for j=1:size(X_train,2)
+        scatterBy2( X_true, X_false, i, j)
+        pause
+    end
 end
 
 
