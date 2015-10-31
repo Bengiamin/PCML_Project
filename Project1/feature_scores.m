@@ -1,3 +1,4 @@
+
 %Compute the score for every featue of x
 
 lambda = 0.5;

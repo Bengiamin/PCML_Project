@@ -1,4 +1,4 @@
-function [ rmseTr, rmseTe] = compute_score(y, X,model, idx, alpha , lambda, K, degree)
+function [ errorTr, errorTe] = compute_score(y, X,model, idx, alpha , lambda, K, degree)
 
 %Model available: ls, lsgd, rr, lr, plr
 if idx ~= 0
@@ -11,7 +11,7 @@ N = size(y,1);
 idx = randperm(N);
 Nk = floor(N/K);
 for k = 1:K
-	idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
+    idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
 end
 
 for k = 1:K
@@ -38,7 +38,7 @@ for k = 1:K
         case 'ls'
             beta = leastSquares(yTr,tXTr);
         case 'rr'
-           beta = ridgeRegression(yTr,tXTr,lambda);
+            beta = ridgeRegression(yTr,tXTr,lambda);
         case 'lr'
             beta = logisticRegression(yTr,tXTr,alpha);
         case 'plr'
@@ -47,12 +47,17 @@ for k = 1:K
             Disp('Unknown model! use one of those: ls, lsgd, rr, lr, plr');
     end
     
-    rmseTrSub(k) = sqrt(2*MSE(yTr,tXTr,beta));
-    rmseTeSub(k) = sqrt(2*MSE(yTe,tXTe,beta));
+    if  (strcmp(model, 'lr') == 1) || (strcmp(model, 'plr') == 1)
+        rmseTrSub(k) = logLikelihoodCost(yTr, tXTr, beta);
+        rmseTeSub(k) = logLikelihoodCost(yTe, tXTe, beta);
+    else
+        rmseTrSub(k) = sqrt(2*MSE(yTr,tXTr,beta));
+        rmseTeSub(k) = sqrt(2*MSE(yTe,tXTe,beta));
+    end
 end
 
-    rmseTr = mean(rmseTrSub);
-	rmseTe = mean(rmseTeSub);
+errorTr = mean(rmseTrSub);
+errorTe = mean(rmseTeSub);
 
 end
 
