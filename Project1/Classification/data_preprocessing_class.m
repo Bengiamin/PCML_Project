@@ -11,13 +11,14 @@ load('Chennai_classification');
 %Extract evaluation data didn't use during training
 [X_train, y_train, X_eval,y_eval] = split(y_train,X_train,0.8);
 
-X_train = normalize(X_train);
+%X_train = normalize(X_train);
+%X_test = normalize(X_test);
 
 %Split data in two y < 3400 and y > 3400 
 idx = find(y_train == 1);
 X_true = X_train(idx,:);
 
-[X_true, a,b,c] =  split(ones(size(X_true,1)), X_true, 1/3);
+%[X_true, a,b,c] =  split(ones(size(X_true,1)), X_true, 1/3);
 
 idx = find(y_train == -1);
 X_false = X_train(idx,:);
@@ -26,6 +27,12 @@ X_bal = [X_true; X_false];
 y_bal = [ones(length(X_true), 1); zeros(length(X_false), 1)-1 ];
 
 tX_train = [ones(size(y_train)) X_train];
+
+%good indices 
+indices = [6,12,23,24,2,5,7,21];
+% others [2,5,7,21, 23,24]
+
+
 % tX_large = [ones(size(y_large)) X_large];
 % tX_small = [ones(size(y_small)) X_small];
 % 

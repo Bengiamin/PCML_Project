@@ -1,4 +1,4 @@
-function [ errorTr, errorTe] = compute_score(y, X, idx, alpha , lambda, K, degree)
+function [ errorTr, errorTe, beta] = compute_score(y, X, idx, alpha , lambda, K, degree)
 
 %Model available: ls, lsgd, rr, lr, plr
 if idx ~= 0
