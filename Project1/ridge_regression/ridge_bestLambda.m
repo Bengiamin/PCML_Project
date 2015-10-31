@@ -13,7 +13,7 @@ for k = 1:K
 end
 
 % lambda values (INSERT CODE)
-lambda = logspace(-2,2,200);
+lambda = logspace(-4,4,1000);
 
 % K-fold cross validation
 for i = 1:length(lambda)
