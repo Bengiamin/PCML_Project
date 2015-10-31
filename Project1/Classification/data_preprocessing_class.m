@@ -22,8 +22,10 @@ X_true = X_train(idx,:);
 idx = find(y_train == -1);
 X_false = X_train(idx,:);
 
+X_bal = [X_true; X_false];
+y_bal = [ones(length(X_true), 1); zeros(length(X_false), 1)-1 ];
 
-% tX_train = [ones(size(y_train)) X_train];
+tX_train = [ones(size(y_train)) X_train];
 % tX_large = [ones(size(y_large)) X_large];
 % tX_small = [ones(size(y_small)) X_small];
 % 

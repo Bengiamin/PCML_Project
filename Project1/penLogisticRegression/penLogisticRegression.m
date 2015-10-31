@@ -4,8 +4,9 @@ function [ beta ] = penLogisticRegression(y,tX,alpha,lambda)
 maxIters = 1000;
 
 % initialize
-si = size(tX(1,:));
-beta = zeros(si(2),1);
+
+beta = zeros(size(tX,2), 1);
+
 
 for k = 1:maxIters
     

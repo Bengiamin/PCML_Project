@@ -1,7 +1,13 @@
-function [ y_hat ] = predictY( tX, beta )
+function [ y_hat, prob ] = predictY( tX, beta )
 %UNTITLED7 Summary of this function goes here
 %   Detailed explanation goes here
-    y_hat = round(tX * beta);
+    
+
+    pred = tX * beta;
+    prob = sigma(pred);
+    
+    y_hat = 2 * round(prob) -1;
+    
 
 
 
