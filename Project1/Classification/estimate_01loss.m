@@ -5,13 +5,10 @@ lambda_1 = 0.0471;
 lambda_2 = 0.05;
 
 %K-fold parameter
-K = 4;
+K = 10;
 
 %alpha
 alpha = 0.5;
-
-%Degree of polynomial for more significant feature
-degree = 0;
 
 % split data in K fold (we will only create indices)
 setSeed(1);
@@ -41,13 +38,9 @@ for k = 1:K
     yTr_1 = yTr(idx);
     XTr_1 = XTr(idx,:);
     
-    %[ XTr_1, yTr_1 ] = removeOutliers( XTr_1, yTr_1, 0);
-    
     idx = find(XTr(:,2) <= 18);
     yTr_2 = yTr(idx);
     XTr_2 = XTr(idx,:);
-    
-    %[ XTr_2, yTr_2 ] = removeOutliers( XTr_2, yTr_2, 0);
     
     %Creating the tXtr matrices some relevant row of X are added as
     %polynomial into the matrix.
@@ -58,51 +51,17 @@ for k = 1:K
     beta_1 = penLogisticRegression(yTr_1,tXTr_1,alpha,lambda_1);
     beta_2 = penLogisticRegression(yTr_2,tXTr_2,alpha,lambda_2);
     
-    %%%%%%%%%%%%%%%%%%% Testing %%%%%%%%%%%%%%%%%%%
-    
-    %Spliting the test value into two set according to the 2nd row of X
-    idx = find(XTe(:,2) > 18);
-    yTe_1 = yTe(idx);
-    XTe_1 = XTe(idx,:);
-    
-    %[ XTe_1, yTe_1 ] = removeOutliers( XTe_1, yTe_1, 0);
-    
-    tXTe_1 = [ones(length(yTe_1), 1) XTe_1];
     
     
-    
-    idx = find(XTe(:,2) <= 18);
-    yTe_2 = yTe(idx);
-    XTe_2 = XTe(idx,:);
-    
-    %[ XTe_2, yTe_2 ] = removeOutliers( XTe_2, yTe_2, 0);
-    
-    tXTe_2 = [ones(length(yTe_2), 1) XTe_2];
-    
-    
-    %Compute the prediction for training and test set
-    [y_hatTr1, probTr1] = predictY(tXTr_1, beta_1);
-    [y_hatTr2, probTr2] = predictY(tXTr_2, beta_2);
-    
-    errTr1(k) = zeroOneLoss(y_hatTr1, yTr_1);
-    errTr2(k) = zeroOneLoss(y_hatTr2, yTr_2);
-    errMeanTr(k) = (errTr1(k) + errTr2(k)) /2;
-    
-    [y_hatTe1, probTe1] = predictY(tXTe_1, beta_1);
-    [y_hatTe2, probTe2] = predictY(tXTe_2, beta_2);
-    
-    errTe1(k) = zeroOneLoss(y_hatTe1, yTe_1);
-    errTe2(k) = zeroOneLoss(y_hatTe2, yTe_2);
-    errMeanTe(k) = (errTe1(k) + errTe2(k)) /2;
     
     
     %%%%%%%%%%%%%%%%%% Testing on unbalanced (evaluation) test %%%%%%%%%%%%%%%%%%%
+    
+    
     %Spliting the test value into two set according to the 2nd row of X
     idx = find(X_eval(:,2) > 18);
     y_eval_1 = y_eval(idx);
     X_eval_1 = X_eval(idx,:);
-    
-    %[ X_eval_1, y_eval_1 ] = removeOutliers( X_eval_1, y_eval_1, 0);
     
     tX_eval_1 = [ones(length(y_eval_1), 1) X_eval_1];
     
@@ -110,7 +69,6 @@ for k = 1:K
     y_eval_2 = y_eval(idx);
     X_eval_2 = X_eval(idx,:);
     
-    %[ X_eval_2, y_eval_2 ] = removeOutliers( X_eval_2, y_eval_2, 0);
     
     tX_eval_2 = [ones(length(y_eval_2), 1) X_eval_2 ];
     
@@ -123,6 +81,14 @@ for k = 1:K
     errMean_eval(k) = (err_eval_1(k) + err_eval_2(k)) /2;
     
     
+    %Compute the prediction for training set
+    [y_hatTr1, probTr1] = predictY(tXTr_1, beta_1);
+    [y_hatTr2, probTr2] = predictY(tXTr_2, beta_2);
+    
+    errTr1(k) = zeroOneLoss(y_hatTr1, yTr_1);
+    errTr2(k) = zeroOneLoss(y_hatTr2, yTr_2);
+    errMeanTr(k) = (errTr1(k) + errTr2(k)) /2;
+    
     
 end
 
@@ -132,10 +98,6 @@ meanTR_2 = mean(errTr2);
 meanTR = mean (errMeanTr)
 stdTr = std(errMeanTr)
 
-meanTE_1 = mean(errTe1);
-meanTE_2 = mean(errTe2);
-meanTE = mean (errMeanTe)
-stdTe = std(errMeanTe)
 
 mean_EVAL_1 = mean(err_eval_1);
 mean_EVAL_2 = mean(err_eval_2);
