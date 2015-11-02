@@ -1,8 +1,8 @@
 data_preprocessing_class;
 
 %Lambda are computed using cross validation
-lambda_1 = 0.0471;
-lambda_2 = 0.05;
+lambda_1 = 0.008;
+lambda_2 = 0.008;
 
 %K-fold parameter
 K = 4;
@@ -37,13 +37,13 @@ for k = 1:K
     %%%%%%%%%%%%%%%%%%% Training %%%%%%%%%%%%%%%%%%%
     
     %Split the training data into two set large and small
-    idx = find(XTr(:,2) > 18);
+    idx = find(XTr(:,2) > -0.15);
     yTr_1 = yTr(idx);
     XTr_1 = XTr(idx,:);
     
     %[ XTr_1, yTr_1 ] = removeOutliers( XTr_1, yTr_1, 0);
     
-    idx = find(XTr(:,2) <= 18);
+    idx = find(XTr(:,2) <= -0.15);
     yTr_2 = yTr(idx);
     XTr_2 = XTr(idx,:);
     
@@ -61,7 +61,7 @@ for k = 1:K
     %%%%%%%%%%%%%%%%%%% Testing %%%%%%%%%%%%%%%%%%%
     
     %Spliting the test value into two set according to the 2nd row of X
-    idx = find(XTe(:,2) > 18);
+    idx = find(XTe(:,2) > -0.15);
     yTe_1 = yTe(idx);
     XTe_1 = XTe(idx,:);
     
@@ -71,7 +71,7 @@ for k = 1:K
     
     
     
-    idx = find(XTe(:,2) <= 18);
+    idx = find(XTe(:,2) <= -0.15);
     yTe_2 = yTe(idx);
     XTe_2 = XTe(idx,:);
     
@@ -98,7 +98,7 @@ for k = 1:K
     
     %%%%%%%%%%%%%%%%%% Testing on unbalanced (evaluation) test %%%%%%%%%%%%%%%%%%%
     %Spliting the test value into two set according to the 2nd row of X
-    idx = find(X_eval(:,2) > 18);
+    idx = find(X_eval(:,2) > -0.15);
     y_eval_1 = y_eval(idx);
     X_eval_1 = X_eval(idx,:);
     
@@ -106,7 +106,7 @@ for k = 1:K
     
     tX_eval_1 = [ones(length(y_eval_1), 1) X_eval_1];
     
-    idx = find(X_eval(:,2) <= 18);
+    idx = find(X_eval(:,2) <= -0.15);
     y_eval_2 = y_eval(idx);
     X_eval_2 = X_eval(idx,:);
     

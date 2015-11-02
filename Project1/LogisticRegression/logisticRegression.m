@@ -11,19 +11,17 @@ for k = 1:maxIters
     % Compute gradient
     g = computeGradientLR(y,tX,beta);
     
-    % Compute cost
-    L = logLikelihoodCost(y,tX,beta);
-    
     % Update beta according to gradient
     beta = beta - alpha.*g;
     
     % Convergence check
     if g'*g < 1e-2; break; end;
-    
-    % store beta and L
-    beta_all(:,k) = beta;
-    L_all(k) = L;
 end
 
+end
+
+function [g] = computeGradientLR(y,tX,beta)   
+    S = sigma(tX*beta);
+    g = tX'*(S - y);
 end
 

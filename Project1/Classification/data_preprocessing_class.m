@@ -11,9 +11,23 @@ load('Chennai_classification');
 %Extract evaluation data didn't use during training
 [X_train, y_train, X_eval,y_eval] = split(y_train,X_train,0.8);
 
-%X_train = normalize(X_train);
-%X_test = normalize(X_test);
-%X_eval = normalize(X_eval);
+X_train_u = X_train;
+X_eval_u = X_eval;
+X_test_u = X_test;
+
+X_train = normalize(X_train);
+X_test = normalize(X_test);
+X_eval = normalize(X_eval);
+
+ categ = [1,4,15,23];
+ X_train(:,23) = X_train_u(:,23);
+ X_eval(:,23) = X_eval_u(:,23);
+ X_test(:,23) = X_test_u(:,23);
+
+%Dummy coding on feature 15
+X_train = dummy_coding(X_train_u, 15);
+X_eval = dummy_coding(X_eval_u, 15);
+X_test = dummy_coding(X_test_u, 15);
 
 %Split data in two y < 3400 and y > 3400 
 % idx = find(y_train == 1);

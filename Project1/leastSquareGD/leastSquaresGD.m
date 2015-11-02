@@ -24,6 +24,14 @@ for k = 1:maxIters
     % Convergence limitation
     if g'*g < 1e-5; break; end;
 end
-
 end
+    
+function [g] = computeGradientLS(y,tX,beta)
+    e = y - tX*beta;    
+    g = tX'*e/(-length(y));
+end
+
+
+
+
 

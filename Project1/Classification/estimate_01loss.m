@@ -1,11 +1,11 @@
 data_preprocessing_class;
 
 %Lambda are computed using cross validation
-lambda_1 = 0.0471;
-lambda_2 = 0.05;
+lambda_1 = 0.008;
+lambda_2 = 0.008;
 
 %K-fold parameter
-K = 10;
+K = 4;
 
 %alpha
 alpha = 0.5;
@@ -21,6 +21,8 @@ for k = 1:K
     idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
 end
 
+min = 100000;
+
 for k = 1:K
     
     idxTe = idxCV(k,:);
@@ -34,11 +36,11 @@ for k = 1:K
     %%%%%%%%%%%%%%%%%%% Training %%%%%%%%%%%%%%%%%%%
     
     %Split the training data into two set large and small
-    idx = find(XTr(:,2) > 18);
+    idx = find(XTr(:,2) > -0.15);
     yTr_1 = yTr(idx);
     XTr_1 = XTr(idx,:);
     
-    idx = find(XTr(:,2) <= 18);
+    idx = find(XTr(:,2) <= -0.15);
     yTr_2 = yTr(idx);
     XTr_2 = XTr(idx,:);
     
@@ -59,13 +61,13 @@ for k = 1:K
     
     
     %Spliting the test value into two set according to the 2nd row of X
-    idx = find(X_eval(:,2) > 18);
+    idx = find(X_eval(:,2) > -0.15);
     y_eval_1 = y_eval(idx);
     X_eval_1 = X_eval(idx,:);
     
     tX_eval_1 = [ones(length(y_eval_1), 1) X_eval_1];
     
-    idx = find(X_eval(:,2) <= 18);
+    idx = find(X_eval(:,2) <= -0.15);
     y_eval_2 = y_eval(idx);
     X_eval_2 = X_eval(idx,:);
     
@@ -89,6 +91,11 @@ for k = 1:K
     errTr2(k) = zeroOneLoss(y_hatTr2, yTr_2);
     errMeanTr(k) = (errTr1(k) + errTr2(k)) /2;
     
+    if(errMeanTr(k) <  min)
+        min = errMeanTr(k);
+        betaStar_1 = beta_1;
+        betaStar_2 = beta_2;
+    end
     
 end
 
@@ -103,3 +110,34 @@ mean_EVAL_1 = mean(err_eval_1);
 mean_EVAL_2 = mean(err_eval_2);
 mean_EVAL = mean (errMean_eval)
 std_EVAL = std(errMean_eval)
+
+%%%%%%%%%%%%%%%%%%% Predicting value for X_test %%%%%%%%%%%%%%%%%%%
+
+idx_1 = find(X_test(:,2) > -0.15);
+X_test_1 = X_test(idx_1,:);
+tX_test_1 = [ones(size(X_test_1,1), 1) X_test_1];
+
+idx_2 = find(X_test(:,2) <= -0.15);
+X_test_2 = X_test(idx_2,:);
+tX_test_2 = [ones(size(X_test_2,1), 1) X_test_2];
+
+[ y_hat_1, prob_1 ] = predictY( tX_test_1, betaStar_1 );
+[ y_hat_2, prob_2 ] = predictY( tX_test_2, betaStar_2 );
+
+%zeroOneLoss(y_hat_1, y_eval(idx_1))
+%zeroOneLoss(y_hat_2, y_eval(idx_2))
+
+y_hat_1 = [idx_1 y_hat_1];
+y_hat_2 = [idx_2 y_hat_2];
+
+y_hat = sortrows([y_hat_1; y_hat_2],1);
+y_hat = y_hat(:,2);
+
+prob_1 = [idx_1 prob_1];
+prob_2 = [idx_2 prob_2];
+
+prob = sortrows([prob_1; prob_2],1);
+prob = prob(:,2);
+
+csvwrite('Result/predictions_classification.csv', prob);
+csvwrite('Result/test_errors_classification.csv', mean_EVAL);

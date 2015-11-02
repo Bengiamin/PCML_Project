@@ -5,7 +5,7 @@ lambda_large = 18.5896;
 lambda_small = 27.8898;
 
 %K-fold parameter
-K = 20;
+K = 10;
 
 %Degree of polynomial for more significant feature
 degree = 5;
