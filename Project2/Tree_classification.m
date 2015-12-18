@@ -35,7 +35,7 @@ fprintf('Splitting into train/test..\n');
 Tr = [];
 Te = [];
 
-training =  [X_hog];
+training =  X_hog;
 
 
 % NOTE: you should do this randomly! and k-fold!
