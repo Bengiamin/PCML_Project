@@ -1,4 +1,4 @@
-clearvars;
+%clearvars;
 
 % -- GETTING STARTED WITH THE IMAGE CLASSIFICATION DATASET -- %
 % IMPORTANT:
@@ -6,11 +6,11 @@ clearvars;
 %    and uncompressed it in the same folder as this file resides.
 
 % Load features and labels of training data
-load train/train.mat;
+%load train/train.mat;
 
 %change to have two classes
 
-train.y2 = train.y;
+%y2 = y;
 %train.y2(train.y2 ~= 4) = 1;
 %train.y2(train.y2 == 4) = 0;
 
@@ -35,17 +35,19 @@ fprintf('Splitting into train/test..\n');
 Tr = [];
 Te = [];
 
-training =  [train.X_hog, train.X_cnn];
+training =  [X_hog];
 
 
 % NOTE: you should do this randomly! and k-fold!
 Tr.idxs = 1:2:size(training ,1);
 Tr.X = training(Tr.idxs,:);
-Tr.y = train.y2(Tr.idxs);
+Tr.y = y(Tr.idxs);
 
 Te.idxs = 2:2:size(training,1);
 Te.X = training(Te.idxs,:);
-Te.y = train.y2(Te.idxs);
+Te.y = y(Te.idxs);
+
+clearvars training
 
 %%
 fprintf('Training SVM model..\n');
@@ -53,23 +55,31 @@ fprintf('Training SVM model..\n');
 % normalize data
 [Tr.normX, mu, sigma] = zscore(Tr.X); % train, get mu and std
 
-treeBagger = TreeBagger(100, Tr.normX, Tr.y);
+treeBagger = TreeBagger(50, Tr.normX, Tr.y);
 
 
 Te.normX = normalize(Te.X, mu, sigma);  % normalize test data
 
+yhat = [];
 
-[yhat, scores] = predict(treeBagger, Te.normX);
+[yhat.Te, scores] = predict(treeBagger, Te.normX);
 
-yhat = str2num(cell2mat(yhat));
+yhat.Te = str2num(cell2mat(yhat.Te));
+
+[yhat.Tr, scores] = predict(treeBagger, Tr.normX);
+
+yhat.Tr = str2num(cell2mat(yhat.Tr));
 
 figure;
-histogram(yhat);
+histogram(yhat.Te);
 
 figure;
 histogram(Te.y);
 
-ber = compute_ber(yhat, Te.y, [1,2,3,4]);
+ber = [];
+ber.Te = compute_ber(yhat.Te, Te.y, [1,2,3,4]);
+
+ber.Tr = compute_ber(yhat.Tr, Tr.y, [1,2,3,4]);
 
 
 % get overall error [NOTE!! this is not the BER, you have to write the code
@@ -79,7 +89,9 @@ ber = compute_ber(yhat, Te.y, [1,2,3,4]);
 
 
 
-fprintf('\n BER Testing error: %.2f%%\n\n', ber * 100 );
+fprintf('\n BER Testing error: %.2f%%\n\n', ber.Te * 100 );
+
+fprintf('\n BER Training error: %.2f%%\n\n', ber.Tr * 100 );
 
 
 % %% visualize samples and their predictions (test set)
