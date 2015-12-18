@@ -35,7 +35,7 @@ fprintf('Splitting into train/test..\n');
 Tr = [];
 Te = [];
 
-training =  X_hog;
+training =  [X_hog, X_cnn];
 
 
 % NOTE: you should do this randomly! and k-fold!
@@ -52,21 +52,15 @@ clearvars training
 %%
 fprintf('Training SVM model..\n');
 
-% normalize data
-[Tr.normX, mu, sigma] = zscore(Tr.X); % train, get mu and std
-
-treeBagger = TreeBagger(50, Tr.normX, Tr.y);
-
-
-Te.normX = normalize(Te.X, mu, sigma);  % normalize test data
+treeBagger = TreeBagger(50, Tr.X, Tr.y);
 
 yhat = [];
 
-[yhat.Te, scores] = predict(treeBagger, Te.normX);
+[yhat.Te, scores] = predict(treeBagger, Te.X);
 
 yhat.Te = str2num(cell2mat(yhat.Te));
 
-[yhat.Tr, scores] = predict(treeBagger, Tr.normX);
+[yhat.Tr, scores] = predict(treeBagger, Tr.X);
 
 yhat.Tr = str2num(cell2mat(yhat.Tr));
 
