@@ -1,17 +1,18 @@
 
-for i = 1:10:201
+for i = 1:15
 
-    [mapped_data, mapping] = compute_mapping(X_hog, 'PCA', i);
+    [mapped_data, mapping] = compute_mapping(X_cnn, 'PCA', i);
     mapped_data = single(mapped_data);
             
         % split data in K fold (we will only create indices)
         setSeed(1);
 
-        K = 3;
+        K = 8;
         %Split the data into k subset
         N = size(y,1);
         idx = randperm(N);
         Nk = floor(N/K);
+        idxCV = zeros(K,Nk);
         for k = 1:K
             idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
         end
