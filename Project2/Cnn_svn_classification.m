@@ -6,13 +6,13 @@ clearvars;
 %    and uncompressed it in the same folder as this file resides.
 
 % Load features and labels of training data
-load train/train.mat;
+% load train/train.mat;
 
 %change to have two classes
 
-train.y2 = train.y;
-train.y2(train.y2 ~= 4) = 1;
-train.y2(train.y2 == 4) = 0;
+y2 = y;
+train.y2(y2 ~= 4) = 1;
+train.y2(y2 == 4) = 0;
 
 % %% --browse through the images and look at labels
 % for i=1:10
@@ -36,25 +36,19 @@ Tr = [];
 Te = [];
 
 % NOTE: you should do this randomly! and k-fold!
-Tr.idxs = 1:2:size(train.X_cnn,1);
-Tr.X = train.X_cnn(Tr.idxs,:);
-Tr.y = train.y2(Tr.idxs);
+Tr.idxs = 1:2:size(X_cnn,1);
+Tr.X = X_cnn(Tr.idxs,:);
+Tr.y = y2(Tr.idxs);
 
-Te.idxs = 2:2:size(train.X_cnn,1);
-Te.X = train.X_cnn(Te.idxs,:);
-Te.y = train.y2(Te.idxs);
+Te.idxs = 2:2:size(X_cnn,1);
+Te.X = X_cnn(Te.idxs,:);
+Te.y = y2(Te.idxs);
 
 %%
 fprintf('Training SVM model..\n');
 
-% normalize data
-[Tr.normX, mu, sigma] = zscore(Tr.X); % train, get mu and std
-
+%
 svmModel = fitcsvm(Tr.normX, Tr.y);
-
-
-Te.normX = normalize(Te.X, mu, sigma);  % normalize test data
-
 
 [yhat, scores] = predict(svmModel, Te.normX);
 
