@@ -39,9 +39,12 @@ Te = [];
 % split data in K fold (we will only create indices)
 setSeed(1);
 
-K = 4;
+K = 6;
+min = 1;
 
-%for nbFea = 1:100:5000
+%for nbFea = 1:1:30
+    for depth = 1:1:20
+        %for tree = 1:1:30
     %Split the data into k subset
     N = size(y,1);
     idx = randperm(N);
@@ -74,13 +77,13 @@ K = 4;
         %%
         fprintf('Training Random forest model..\n');
         
-        pTrain={'maxDepth',13,'M',22,'H',4,'F1',8};
+        pTrain={'maxDepth',depth,'M',18,'H',4,'F1',30,'split','gini'};
         
         forest = forestTrain( Tr.X, Tr.y, pTrain);
         
-        pTrain2={'maxDepth',13,'M',22,'H',2,'F1',8};
+        %pTrain2={'maxDepth',13,'M',22,'H',2,'F1',8};
         
-        forest2 = forestTrain( Tr.X, Tr.y2, pTrain);
+        %forest2 = forestTrain( Tr.X, Tr.y2, pTrain);
         
         yhat = [];
         
@@ -102,15 +105,32 @@ K = 4;
         
     end
     
+    if(mean(berTe) < min)
+        bTree = tree;
+        bDepth = depth;
+        bFea = nbFea;
+        
+        min = mean(berTe)
+    end
+    %berTeTree(nbFea) = mean(berTe)
+    %berTrTree(nbFea) = mean(berTr)
     
-    berTeTree = mean(berTe)
-    berTrTree = mean(berTr)
     
+        %end
+    end
 %end
 
-    %idxss = 1:100:5000;
-    %resTr = berTeTree(nbFea);
-    %resTe = berTrTree(nbFea);
+   % bTree
+    bDepth
+    %bFea
+    min
+    %idxss = 1:1:30;
+    %resTr = berTeTree(idxss);
+    %resTe = berTrTree(idxss);
+    
+    %plot(idxss,resTe)
+    %hold on
+    %plot(idxss,resTr)
 % %% visualize samples and their predictions (test set)
 % figure;
 % for i=20:30  % just 10 of them, though there are thousands

@@ -30,6 +30,15 @@ clearvars train
 %Extract evaluation data didn't use during training
 [X_cnn, X_hog, y, X_eval_cnn, X_eval_hog, y_eval] = split(y,X_cnn, X_hog,0.8);
 
+y2 = y;
+
+y2(y2 ~= 4) = 1;
+y2(y2 == 4) = 0;
+
+y2_eval = y_eval;
+
+y2_eval(y2_eval ~= 4) = 1;
+y2_eval(y2_eval == 4) = 0;
 
 load pca_cnn.mat;
 X_cnn_pca = single(mapped_data);
