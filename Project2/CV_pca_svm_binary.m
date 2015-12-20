@@ -1,8 +1,12 @@
 
-for i = 1:15
+% For binary svm classification,
+% test the principal components to see what error they give us and keep
+% only the most useful ones.
+for i = 1:1
 
-        mapped_data_svm = single(mapped_data(:,1:i));
-            
+        mapped_data_svm = single(X_cnn_pca);
+        
+        %transform labels into binary
         y2 = y;
         y2(y2 ~= 4) = 1;
         y2(y2 == 4) = 0;
@@ -10,7 +14,7 @@ for i = 1:15
         % split data in K fold (we will only create indices)
         setSeed(1);
 
-        K = 4;
+        K = 5;
         %Split the data into k subset
         N = size(y,1);
         idx = randperm(N);
@@ -41,8 +45,7 @@ for i = 1:15
 
             fprintf('Training using svm ...\n');
 
-            %pTrain={'maxDepth',100,'M',50,'H',4,'F1',1500};
-
+            %binary fit 
              svmModel = fitcsvm(Tr.X, Tr.y);
 
             yhat = [];
@@ -51,13 +54,15 @@ for i = 1:15
             
             yhat.Tr =  predict(svmModel, Tr.X);
 
+            %computer ber for this model
 
             berTe(k) = compute_ber(yhat.Te, Te.y, [0,1]);
             berTr(k) = compute_ber(yhat.Tr, Tr.y, [0,1]);
 
 
         end
-
+        
+        %compute the average ber
         berMeanTrain(i) = mean(berTr);
         berMeanTest(i) = mean(berTe);
 

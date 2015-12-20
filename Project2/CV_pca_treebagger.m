@@ -14,6 +14,7 @@ for i = 1:25
         idx = randperm(N);
         Nk = floor(N/K);
         idxCV = zeros(K,Nk);
+        
         for k = 1:K
             idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
         end
@@ -39,8 +40,7 @@ for i = 1:25
 
             fprintf('Training using random forests (treebagger) ...\n');
 
-            %pTrain={'maxDepth',100,'M',50,'H',4,'F1',1500};
-
+            %use treebagger from matlab 
             forest = TreeBagger(50, Tr.X, Tr.y);
 
             yhat = [];
@@ -51,13 +51,14 @@ for i = 1:25
             yhat.Tr =  predict(forest, Tr.X);
             yhat.Tr = str2num(cell2mat(yhat.Tr));
 
-
+            %computer ber for this model
             berTe(k) = compute_ber(yhat.Te, Te.y, [1,2,3,4]);
             berTr(k) = compute_ber(yhat.Tr, Tr.y, [1,2,3,4]);
 
 
         end
-
+        
+        %compute the average ber
         berMeanTrain(i) = mean(berTr);
         berMeanTest(i) = mean(berTe);
 

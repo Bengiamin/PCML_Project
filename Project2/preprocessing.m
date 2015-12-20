@@ -1,3 +1,6 @@
+
+%script used to load and prepare our data 
+
 clearvars;
 
 
@@ -31,12 +34,13 @@ clearvars train
 [X_cnn, X_hog, y, X_eval_cnn, X_eval_hog, y_eval] = split(y,X_cnn, X_hog,0.8);
 
 
+%load the PCA transformed version of our data.
 load pca_cnn.mat;
 X_cnn_pca = single(mapped_data);
 load pca_hog.mat;
 X_hog_pca = single(mapped_data);
 
+%clear unnecessary variables
 clearvars mapped_data mu_cnn mu_hog sigma_cnn sigma_hog;
 
 
-%coeff_cnn = pca(X_cnn,'NumComponents',1000);
