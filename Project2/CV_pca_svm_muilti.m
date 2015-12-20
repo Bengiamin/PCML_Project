@@ -31,10 +31,10 @@ for i = 1:20
             Te = [];
 
             % NOTE: you should do this randomly! and k-fold!
-            Tr.X = mapped_data(idxTr,:);
+            Tr.X = mapped_data_svm(idxTr,:);
             Tr.y = y(idxTr);
 
-            Te.X = mapped_data(idxTe,:);
+            Te.X = mapped_data_svm(idxTe,:);
             Te.y = y(idxTe);
 
 
