@@ -15,6 +15,7 @@ idxxxx = 1:10:200;
         idx = randperm(N);
         Nk = floor(N/K);
         idxCV = zeros(K,Nk);
+        
         for k = 1:K
             idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
         end
@@ -44,6 +45,7 @@ idxxxx = 1:10:200;
 
             forest = TreeBagger(500, Tr.X, Tr.y,'NVarToSample', 9);
 
+
             yhat = [];
 
             yhat.Te = predict(forest, Te.X);
@@ -52,7 +54,7 @@ idxxxx = 1:10:200;
             yhat.Tr =  predict(forest, Tr.X);
             yhat.Tr = str2num(cell2mat(yhat.Tr));
 
-
+            %computer ber for this model
             berTe(k) = compute_ber(yhat.Te, Te.y, [1,2,3,4]);
             berTr(k) = compute_ber(yhat.Tr, Tr.y, [1,2,3,4]);
 

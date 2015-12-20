@@ -1,13 +1,16 @@
 
-for i = 1:20
+% For multi-class svm classification,
+% test the principal components to see what error they give us and keep
+% only the most useful ones.
+for i = 1:1
 
-        mapped_data_svm = single(mapped_data(:,1:i));
+        mapped_data_svm = single([X_cnn_pca(:,1:100) X_hog_pca(:,1:10)]);
 
 
         % split data in K fold (we will only create indices)
         setSeed(1);
 
-        K = 4;
+        K = 5;
         %Split the data into k subset
         N = size(y,1);
         idx = randperm(N);
@@ -42,8 +45,7 @@ for i = 1:20
 
             fprintf('Training using multi svm ...\n');
 
-            %pTrain={'maxDepth',100,'M',50,'H',4,'F1',1500};
-
+            %multi class fit using svm from matlab
              svmModel = fitcecoc(Tr.X, Tr.y);
 
             yhat = [];
@@ -52,13 +54,14 @@ for i = 1:20
             
             yhat.Tr =  predict(svmModel, Tr.X);
 
-            
+                        %computer ber for this model
             berTe(k) = compute_ber(yhat.Te, Te.y, [1,2,3,4]);
             berTr(k) = compute_ber(yhat.Tr, Tr.y, [1,2,3,4]);
 
 
         end
 
+              %compute the average ber
         berMeanTrain(i) = mean(berTr);
         berMeanTest(i) = mean(berTe);
 
