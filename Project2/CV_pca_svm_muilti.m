@@ -1,19 +1,22 @@
 
-% test the principal components to see what error they give us and keep
-% only the most useful ones.
-for i = 1:25
+for i = 1:20
 
-    mapped_data_tree = single(mapped_data(:,1:i));
-            
+        mapped_data_svm = single(mapped_data(:,1:i));
+
+
         % split data in K fold (we will only create indices)
         setSeed(1);
 
-        K = 8;
+        K = 4;
         %Split the data into k subset
         N = size(y,1);
         idx = randperm(N);
         Nk = floor(N/K);
         idxCV = zeros(K,Nk);
+        
+        berTe = zeros(K, 1);
+        berTr = zeros(K,1);
+        
         for k = 1:K
             idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
         end
@@ -28,30 +31,28 @@ for i = 1:25
             Te = [];
 
             % NOTE: you should do this randomly! and k-fold!
-            Tr.X = mapped_data_tree(idxTr,:);
+            Tr.X = mapped_data(idxTr,:);
             Tr.y = y(idxTr);
 
-            Te.X = mapped_data_tree(idxTe,:);
+            Te.X = mapped_data(idxTe,:);
             Te.y = y(idxTe);
 
 
 
 
-            fprintf('Training using random forests (treebagger) ...\n');
+            fprintf('Training using multi svm ...\n');
 
             %pTrain={'maxDepth',100,'M',50,'H',4,'F1',1500};
 
-            forest = TreeBagger(50, Tr.X, Tr.y);
+             svmModel = fitcecoc(Tr.X, Tr.y);
 
             yhat = [];
 
-            yhat.Te = predict(forest, Te.X);
-            yhat.Te = str2num(cell2mat(yhat.Te));
+            yhat.Te = predict(svmModel, Te.X);
             
-            yhat.Tr =  predict(forest, Tr.X);
-            yhat.Tr = str2num(cell2mat(yhat.Tr));
+            yhat.Tr =  predict(svmModel, Tr.X);
 
-
+            
             berTe(k) = compute_ber(yhat.Te, Te.y, [1,2,3,4]);
             berTr(k) = compute_ber(yhat.Tr, Tr.y, [1,2,3,4]);
 
