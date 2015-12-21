@@ -1,16 +1,12 @@
 
-% For binary svm classification,
+% For multi-class svm classification,
 % test the principal components to see what error they give us and keep
 % only the most useful ones.
 for i = 1:1
 
-        mapped_data_svm = single(X_cnn_pca);
-        
-        %transform labels into binary
-        y2 = y;
-        y2(y2 ~= 4) = 1;
-        y2(y2 == 4) = 0;
-        
+        mapped_data_svm = single(X_cnn_pca(:,1:100) );
+
+
         % split data in K fold (we will only create indices)
         setSeed(1);
 
@@ -20,6 +16,10 @@ for i = 1:1
         idx = randperm(N);
         Nk = floor(N/K);
         idxCV = zeros(K,Nk);
+        
+        berTe = zeros(K, 1);
+        berTr = zeros(K,1);
+        
         for k = 1:K
             idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
         end
@@ -35,18 +35,19 @@ for i = 1:1
 
             % NOTE: you should do this randomly! and k-fold!
             Tr.X = mapped_data_svm(idxTr,:);
-            Tr.y = y2(idxTr);
+            Tr.y = y(idxTr);
 
             Te.X = mapped_data_svm(idxTe,:);
-            Te.y = y2(idxTe);
+            Te.y = y(idxTe);
 
 
+        
 
 
-            fprintf('Training using svm ...\n');
+            fprintf('Training using multi svm ...\n');
 
-            %binary fit 
-             svmModel = fitcsvm(Tr.X, Tr.y);
+            %multi class fit using svm from matlab
+             svmModel = fitcecoc(Tr.X, Tr.y);
 
             yhat = [];
 
@@ -54,16 +55,26 @@ for i = 1:1
             
             yhat.Tr =  predict(svmModel, Tr.X);
 
-            %computer ber for this model
+            yhat.Te(yhat.Te ~= 4) = 1;
+            yhat.Te(yhat.Te == 4) = 0;
 
+            yhat.Tr(yhat.Tr ~= 4) = 1;
+            yhat.Tr(yhat.Tr == 4) = 0;
+
+            Tr.y(Tr.y ~= 4) = 1;
+            Tr.y(Tr.y == 4) = 0;
+
+            Te.y(Te.y ~= 4) = 1;
+            Te.y(Te.y == 4) = 0;
+            
+                        %computer ber for this model
             berTe(k) = compute_ber(yhat.Te, Te.y, [0,1]);
             berTr(k) = compute_ber(yhat.Tr, Tr.y, [0,1]);
 
-            
 
         end
-        
-        %compute the average ber
+
+              %compute the average ber
         berMeanTrain(i) = mean(berTr);
         berMeanTest(i) = mean(berTe);
 
