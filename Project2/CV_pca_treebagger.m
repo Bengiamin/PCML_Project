@@ -1,9 +1,10 @@
 
 % test the principal components to see what error they give us and keep
 % only the most useful ones.
-for i = 1:25
+idxxxx = 1:10:200;
+%for i = idxxxx
 
-    mapped_data_tree = single(mapped_data(:,1:i));
+    training = [X_cnn_pca(:,1:21)];
             
         % split data in K fold (we will only create indices)
         setSeed(1);
@@ -29,10 +30,10 @@ for i = 1:25
             Te = [];
 
             % NOTE: you should do this randomly! and k-fold!
-            Tr.X = mapped_data_tree(idxTr,:);
+            Tr.X = training(idxTr,:);
             Tr.y = y(idxTr);
 
-            Te.X = mapped_data_tree(idxTe,:);
+            Te.X = training(idxTe,:);
             Te.y = y(idxTe);
 
 
@@ -40,8 +41,10 @@ for i = 1:25
 
             fprintf('Training using random forests (treebagger) ...\n');
 
-            %use treebagger from matlab 
-            forest = TreeBagger(50, Tr.X, Tr.y);
+            %pTrain={'maxDepth',100,'M',50,'H',4,'F1',1500};
+
+            forest = TreeBagger(500, Tr.X, Tr.y,'NVarToSample', 9);
+
 
             yhat = [];
 
@@ -57,16 +60,20 @@ for i = 1:25
 
 
         end
-        
-        %compute the average ber
-        berMeanTrain(i) = mean(berTr);
-        berMeanTest(i) = mean(berTe);
+
+        %berMeanTrain(i) = mean(berTr);
+        %berMeanTest(i) = mean(berTe);
 
         
-        fprintf('\n Testing with dimension %.f', i );
+       % fprintf('\n Testing with dimension %.f', i );
         fprintf('\n   BER Testing error: %.2f%%\n\n', mean(berTe) * 100 );
 
         fprintf('\n   BER Training error: %.2f%%\n\n',mean(berTr) * 100 );
-end
+%end
+
+
+%plot(idxxxx,berMeanTrain(idxxxx))
+%hold on
+%plot(idxxxx,berMeanTest(idxxxx))
 
 
