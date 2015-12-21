@@ -2,7 +2,7 @@
 
 
 %Training our model on the data
-forest = TreeBagger(91, X_cnn_pca(:,1:21), y,'NVarToSample', 9);
+%forest = TreeBagger(91, X_cnn_pca(:,1:21), y,'NVarToSample', 9);
 
 
 K = 6;
@@ -17,16 +17,25 @@ for k = 1:K
     idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
 end
 
+load pca_cnn_map.mat;
+
+X_eval_mapp = X_eval_cnn*mapping.M(:,1:21);
+
+
 for k = 1:K
     idxTe = idxCV([1:k-1 k+1:end],:);
     idxTe = idxTe(:);
     
-    X_eval_T = X_eval_cnn(idxTe,1:21);
+    
+    X_eval_T = X_eval_mapp(idxTe,:);
     y_eval_T = y2_eval(idxTe);
+    y_eval_full = y_eval(idxTe);
     
     %Predict on subset of evaluation
     yhat = predict(forest, X_eval_T);
     yhat = str2num(cell2mat(yhat));
+    
+    compute_ber(yhat, y_eval_full, [1,2,3,4])
     
     %Aggregate to binary classification
     classVoteBin = yhat;
