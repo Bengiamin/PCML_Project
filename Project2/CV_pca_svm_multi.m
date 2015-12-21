@@ -54,22 +54,25 @@ for i = 1:1
             yhat.Te = predict(svmModel, Te.X);
             
             yhat.Tr =  predict(svmModel, Tr.X);
-
-            yhat.Te(yhat.Te ~= 4) = 1;
-            yhat.Te(yhat.Te == 4) = 0;
-
-            yhat.Tr(yhat.Tr ~= 4) = 1;
-            yhat.Tr(yhat.Tr == 4) = 0;
-
-            Tr.y(Tr.y ~= 4) = 1;
-            Tr.y(Tr.y == 4) = 0;
-
-            Te.y(Te.y ~= 4) = 1;
-            Te.y(Te.y == 4) = 0;
-            
+% 
+%             yhat.Te(yhat.Te ~= 4) = 1;
+%             yhat.Te(yhat.Te == 4) = 0;
+% 
+%             yhat.Tr(yhat.Tr ~= 4) = 1;
+%             yhat.Tr(yhat.Tr == 4) = 0;
+% 
+%             Tr.y(Tr.y ~= 4) = 1;
+%             Tr.y(Tr.y == 4) = 0;
+% 
+%             Te.y(Te.y ~= 4) = 1;
+%             Te.y(Te.y == 4) = 0;
+%             
                         %computer ber for this model
-            berTe(k) = compute_ber(yhat.Te, Te.y, [0,1]);
-            berTr(k) = compute_ber(yhat.Tr, Tr.y, [0,1]);
+            berTe(k) = compute_ber(yhat.Te, Te.y, [1,2,3,4]);
+            berTr(k) = compute_ber(yhat.Tr, Tr.y, [1,2,3,4]);
+                        
+%             berTe(k) = compute_ber(yhat.Te, Te.y, [0,1]);
+%             berTr(k) = compute_ber(yhat.Tr, Tr.y, [0,1]);
 
 
         end
