@@ -1,8 +1,8 @@
-% Load features and labels of training data
+%You should run the preprocessing script to load variable
 
 K = 6;
 
-%Creating K paritions
+%computing the k Fold
 N = size(y,1);
 idx = randperm(N);
 Nk = floor(N/K);
@@ -15,19 +15,17 @@ for k = 1:K
     idxTr = idxCV([1:k-1 k+1:end],:);
     idxTr = idxTr(:);
     
-    %We reduce our cnn feature using PCA to dimension 100
     training =  [X_cnn_pca(:,1:100)];
     
     Tr = [];
     Te = [];
     
-    %Spliting training and testing
+    % Spliting training and testing
     Tr.X = training(idxTr,:);
-    Tr.y = y(idxTr); 
+    Tr.y = y2(idxTr);
     
     Te.X = training(idxTe,:);
-    Te.y = y(idxTe);
-    Te.y2 = y2(idxTe);
+    Te.y = y2(idxTe);
     
     clearvars training
     
@@ -39,7 +37,7 @@ for k = 1:K
     
     % setup NN. The first layer needs to have number of features neurons,
     %  and the last layer the number of classes (here four).
-    nn = nnsetup([size(Tr.X,2) 10 4]);
+    nn = nnsetup([size(Tr.X,2) 10 2]);
     opts.numepochs =  20;   %  Number of full sweeps through data
     opts.batchsize = 100;  %  Take a mean gradient step over this many samples
     
@@ -56,9 +54,8 @@ for k = 1:K
     
     % prepare labels for NN
     LL = [1*(Tr.y == 1), ...
-        1*(Tr.y == 2), ...
-        1*(Tr.y == 3), ...
-        1*(Tr.y == 4) ];  % first column, p(y=1)
+        1*(Tr.y == 0),]; 
+    % first column, p(y=1)
     % second column, p(y=2), etc
     
     [nn, L] = nntrain(nn, Tr.X, LL, opts);
@@ -78,16 +75,10 @@ for k = 1:K
     % get the most likely class
     [~,classVote] = max(nnPred,[],2);
 
-    %Aggragating the result to obtain a a binary classification
-    classVoteBin = classVote;
-    
-    classVoteBin(classVoteBin ~= 4) = 1;
-    classVoteBin(classVoteBin == 4) = 0;
+    classVote(classVote == 2) = 0;
 
-    berTe(k) = compute_ber(classVote, Te.y, [1,2,3,4]);
-    berTeBin(k) = compute_ber(classVoteBin, Te.y2, [1,0]);
+    berTe(k) = compute_ber(classVote, Te.y, [1,0]);
     
 end
 
 fprintf('\nTesting error: %.2f%%\n\n', mean(berTe) * 100 );
-fprintf('\nTesting error binary: %.2f%%\n\n', mean(berTeBin) * 100 );
